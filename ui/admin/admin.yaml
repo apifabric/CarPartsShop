@@ -1,0 +1,322 @@
+about:
+  date: January 29, 2025 08:03:37
+  recent_changes: works with modified safrs-react-admin
+  version: 0.0.0
+api_root: '{http_type}://{swagger_host}:{port}/{api}'
+authentication: '{system-default}'
+info:
+  number_relationships: 11
+  number_tables: 12
+info_toggle_checked: true
+resources:
+  Category:
+    attributes:
+    - label: ' name*'
+      name: name
+      search: true
+      sort: true
+    - name: id
+    description: Model for different categories of car parts.
+    info_list: Model for different categories of car parts.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - category_id
+      name: PartCategoryList
+      resource: PartCategory
+    type: Category
+    user_key: name
+  Customer:
+    attributes:
+    - label: ' name*'
+      name: name
+      search: true
+      sort: true
+    - name: email
+    - name: phone
+    - name: id
+    description: Model representing customers purchasing car parts.
+    info_list: Model representing customers purchasing car parts.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - customer_id
+      name: OrderList
+      resource: Order
+    type: Customer
+    user_key: name
+  Employee:
+    attributes:
+    - label: ' name*'
+      name: name
+      search: true
+      sort: true
+    - name: hire_date
+      type: DATE
+    - name: position
+    - name: id
+    description: Model for shop employees.
+    info_list: Model for shop employees.
+    type: Employee
+    user_key: name
+  Inventory:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: part_id
+    - name: location
+    - name: quantity
+    description: Model representing inventory details for parts.
+    info_list: Model representing inventory details for parts.
+    tab_groups:
+    - direction: toone
+      fks:
+      - part_id
+      name: part
+      resource: Part
+    type: Inventory
+    user_key: id
+  Order:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: customer_id
+    - name: date
+      type: DATE
+    description: Model representing each order made by customers.
+    info_list: Model representing each order made by customers.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - order_id
+      name: OrderItemList
+      resource: OrderItem
+    - direction: toone
+      fks:
+      - customer_id
+      name: customer
+      resource: Customer
+    type: Order
+    user_key: id
+  OrderItem:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: order_id
+    - name: part_id
+    - name: quantity
+    description: Model for individual items within an order, linking orders with parts.
+    info_list: Model for individual items within an order, linking orders with parts.
+    tab_groups:
+    - direction: toone
+      fks:
+      - order_id
+      name: order
+      resource: Order
+    - direction: toone
+      fks:
+      - part_id
+      name: part
+      resource: Part
+    type: OrderItem
+    user_key: id
+  Part:
+    attributes:
+    - label: ' name*'
+      name: name
+      search: true
+      sort: true
+    - name: supplier_id
+    - name: price
+    - name: stock_quantity
+    - name: id
+    description: Model for individual car parts available in the shop.
+    info_list: Model for individual car parts available in the shop.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - part_id
+      name: InventoryList
+      resource: Inventory
+    - direction: tomany
+      fks:
+      - part_id
+      name: OrderItemList
+      resource: OrderItem
+    - direction: tomany
+      fks:
+      - part_id
+      name: PartCategoryList
+      resource: PartCategory
+    - direction: tomany
+      fks:
+      - part_id
+      name: SupplierOrderItemList
+      resource: SupplierOrderItem
+    - direction: tomany
+      fks:
+      - part_id
+      name: WarrantyList
+      resource: Warranty
+    - direction: toone
+      fks:
+      - supplier_id
+      name: supplier
+      resource: Supplier
+    type: Part
+    user_key: name
+  PartCategory:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: category_id
+    - name: part_id
+    description: Junction table to establish many-to-many relationship between parts
+      and categories.
+    info_list: Junction table to establish many-to-many relationship between parts
+      and categories.
+    tab_groups:
+    - direction: toone
+      fks:
+      - category_id
+      name: category
+      resource: Category
+    - direction: toone
+      fks:
+      - part_id
+      name: part
+      resource: Part
+    type: PartCategory
+    user_key: id
+  Supplier:
+    attributes:
+    - label: ' name*'
+      name: name
+      search: true
+      sort: true
+    - name: contact_number
+    - name: address
+    - name: id
+    description: Model for suppliers providing car parts to the shop.
+    info_list: Model for suppliers providing car parts to the shop.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - supplier_id
+      name: PartList
+      resource: Part
+    - direction: tomany
+      fks:
+      - supplier_id
+      name: SupplierOrderList
+      resource: SupplierOrder
+    type: Supplier
+    user_key: name
+  SupplierOrder:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: supplier_id
+    - name: date
+      type: DATE
+    description: Model representing orders made to suppliers.
+    info_list: Model representing orders made to suppliers.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - supplier_order_id
+      name: SupplierOrderItemList
+      resource: SupplierOrderItem
+    - direction: toone
+      fks:
+      - supplier_id
+      name: supplier
+      resource: Supplier
+    type: SupplierOrder
+    user_key: id
+  SupplierOrderItem:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: part_id
+    - name: supplier_order_id
+    - name: quantity
+    description: Model for items within a supplier order, linking Supplier Orders
+      with Parts.
+    info_list: Model for items within a supplier order, linking Supplier Orders with
+      Parts.
+    tab_groups:
+    - direction: toone
+      fks:
+      - part_id
+      name: part
+      resource: Part
+    - direction: toone
+      fks:
+      - supplier_order_id
+      name: supplier_order
+      resource: SupplierOrder
+    type: SupplierOrderItem
+    user_key: id
+  Warranty:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: part_id
+    - name: expiration_date
+      type: DATE
+    description: Model representing warranty information associated with parts.
+    info_list: Model representing warranty information associated with parts.
+    tab_groups:
+    - direction: toone
+      fks:
+      - part_id
+      name: part
+      resource: Part
+    type: Warranty
+    user_key: id
+settings:
+  HomeJS: /admin-app/home.js
+  max_list_columns: 8
+  style_guide:
+    applicationLocales:
+    - en
+    - es
+    currency_symbol: $
+    currency_symbol_position: left
+    date_format: LL
+    decimal_max: '1000000000'
+    decimal_min: '0'
+    decimal_separator: .
+    detail_mode: tab
+    edit_on_mode: dblclick
+    exclude_listpicker: false
+    include_translation: 'false'
+    keycloak_client_id: alsclient
+    keycloak_realm: kcals
+    keycloak_url: http://localhost:8080
+    locale: en
+    max_decimal_digits: '4'
+    min_decimal_digits: '2'
+    new_mode: dialog
+    pick_style: list
+    row_height: small,
+    serviceType: OntimizeEE
+    startSessionPath: /auth/login
+    style: light
+    thousand_separator: ','
+    use_keycloak: 'false'

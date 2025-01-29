@@ -1,0 +1,130 @@
+{
+    "models": [
+        {
+            "classname": "Part",
+            "code": "class Part(Base):\n    __tablename__ = 'part'\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String)\n    supplier_id = Column(Integer, ForeignKey('supplier.id'))\n    price = Column(Integer)\n    stock_quantity = Column(Integer)",
+            "description": "Model for individual car parts available in the shop.",
+            "name": "Part"
+        },
+        {
+            "classname": "Supplier",
+            "code": "class Supplier(Base):\n    __tablename__ = 'supplier'\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String)\n    contact_number = Column(String)\n    address = Column(String)",
+            "description": "Model for suppliers providing car parts to the shop.",
+            "name": "Supplier"
+        },
+        {
+            "classname": "Category",
+            "code": "class Category(Base):\n    __tablename__ = 'category'\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String)",
+            "description": "Model for different categories of car parts.",
+            "name": "Category"
+        },
+        {
+            "classname": "PartCategory",
+            "code": "class PartCategory(Base):\n    __tablename__ = 'part_category'\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    part_id = Column(Integer, ForeignKey('part.id'))\n    category_id = Column(Integer, ForeignKey('category.id'))",
+            "description": "Junction table to establish many-to-many relationship between parts and categories.",
+            "name": "PartCategory"
+        },
+        {
+            "classname": "Customer",
+            "code": "class Customer(Base):\n    __tablename__ = 'customer'\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String)\n    email = Column(String)\n    phone = Column(String)",
+            "description": "Model representing customers purchasing car parts.",
+            "name": "Customer"
+        },
+        {
+            "classname": "Order",
+            "code": "class Order(Base):\n    __tablename__ = 'order'\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    customer_id = Column(Integer, ForeignKey('customer.id'))\n    date = Column(Date)",
+            "description": "Model representing each order made by customers.",
+            "name": "Order"
+        },
+        {
+            "classname": "OrderItem",
+            "code": "class OrderItem(Base):\n    __tablename__ = 'order_item'\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    order_id = Column(Integer, ForeignKey('order.id'))\n    part_id = Column(Integer, ForeignKey('part.id'))\n    quantity = Column(Integer)",
+            "description": "Model for individual items within an order, linking orders with parts.",
+            "name": "OrderItem"
+        },
+        {
+            "classname": "Employee",
+            "code": "class Employee(Base):\n    __tablename__ = 'employee'\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String)\n    hire_date = Column(Date)\n    position = Column(String)",
+            "description": "Model for shop employees.",
+            "name": "Employee"
+        },
+        {
+            "classname": "Inventory",
+            "code": "class Inventory(Base):\n    __tablename__ = 'inventory'\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    location = Column(String)\n    part_id = Column(Integer, ForeignKey('part.id'))\n    quantity = Column(Integer)",
+            "description": "Model representing inventory details for parts.",
+            "name": "Inventory"
+        },
+        {
+            "classname": "SupplierOrder",
+            "code": "class SupplierOrder(Base):\n    __tablename__ = 'supplier_order'\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    supplier_id = Column(Integer, ForeignKey('supplier.id'))\n    date = Column(Date)",
+            "description": "Model representing orders made to suppliers.",
+            "name": "SupplierOrder"
+        },
+        {
+            "classname": "SupplierOrderItem",
+            "code": "class SupplierOrderItem(Base):\n    __tablename__ = 'supplier_order_item'\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    supplier_order_id = Column(Integer, ForeignKey('supplier_order.id'))\n    part_id = Column(Integer, ForeignKey('part.id'))\n    quantity = Column(Integer)",
+            "description": "Model for items within a supplier order, linking Supplier Orders with Parts.",
+            "name": "SupplierOrderItem"
+        },
+        {
+            "classname": "Warranty",
+            "code": "class Warranty(Base):\n    __tablename__ = 'warranty'\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    part_id = Column(Integer, ForeignKey('part.id'))\n    expiration_date = Column(Date)",
+            "description": "Model representing warranty information associated with parts.",
+            "name": "Warranty"
+        }
+    ],
+    "rules": [],
+    "test_data": "All test data rows are given as separate object instance creations for each model.",
+    "test_data_rows": [
+        {
+            "test_data_row_variable": "part_row_1",
+            "code": "part_row_1 = Part(name=\"Brake Pad\", supplier_id=1, price=50, stock_quantity=100)"
+        },
+        {
+            "test_data_row_variable": "part_row_2",
+            "code": "part_row_2 = Part(name=\"Oil Filter\", supplier_id=2, price=30, stock_quantity=150)"
+        },
+        {
+            "test_data_row_variable": "part_row_3",
+            "code": "part_row_3 = Part(name=\"Air Filter\", supplier_id=3, price=40, stock_quantity=200)"
+        },
+        {
+            "test_data_row_variable": "part_row_4",
+            "code": "part_row_4 = Part(name=\"Battery\", supplier_id=4, price=200, stock_quantity=60)"
+        },
+        {
+            "test_data_row_variable": "supplier_row_1",
+            "code": "supplier_row_1 = Supplier(name=\"ACME Parts\", contact_number=\"1234567890\", address=\"123 Main St\")"
+        },
+        {
+            "test_data_row_variable": "supplier_row_2",
+            "code": "supplier_row_2 = Supplier(name=\"Auto Supplies Co.\", contact_number=\"0987654321\", address=\"456 Park Ave\")"
+        },
+        {
+            "test_data_row_variable": "supplier_row_3",
+            "code": "supplier_row_3 = Supplier(name=\"SpareParts Warehouse\", contact_number=\"3216549870\", address=\"789 Elm Rd\")"
+        },
+        {
+            "test_data_row_variable": "supplier_row_4",
+            "code": "supplier_row_4 = Supplier(name=\"Parts Hub\", contact_number=\"6549873210\", address=\"101 Pine St\")"
+        },
+        {
+            "test_data_row_variable": "category_row_1",
+            "code": "category_row_1 = Category(name=\"Electrical\")"
+        },
+        {
+            "test_data_row_variable": "category_row_2",
+            "code": "category_row_2 = Category(name=\"Brakes\")"
+        },
+        {
+            "test_data_row_variable": "category_row_3",
+            "code": "category_row_3 = Category(name=\"Filters\")"
+        },
+        {
+            "test_data_row_variable": "category_row_4",
+            "code": "category_row_4 = Category(name=\"Batteries\")"
+        }
+    ],
+    "test_data_sqlite": "Test data for each table as separate INSERT statements would typically look like:\n\nINSERT INTO part (name, supplier_id, price, stock_quantity) VALUES ('Brake Pad', 1, 50, 100);\nINSERT INTO part (name, supplier_id, price, stock_quantity) VALUES ('Oil Filter', 2, 30, 150);\nINSERT INTO supplier (name, contact_number, address) VALUES ('ACME Parts', '1234567890', '123 Main St');\n... (continue for each test data row)",
+    "name": "CarPartsShop"
+}
