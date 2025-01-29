@@ -1,0 +1,53 @@
+{
+    "rules": [],
+    "models": [
+        {
+            "classname": "Category",
+            "code": "class Category(Base):  # type: ignore\n    \"\"\"\n    description: Model for different categories of car parts.\n    \"\"\"\n    __tablename__ = 'category'\n    _s_collection_name = 'Category'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    name = Column(String)\n\n    # parent relationships (access parent)\n\n    # child relationships (access children)\n    PartCategoryList : Mapped[List[\"PartCategory\"]] = relationship(back_populates=\"category\")"
+        },
+        {
+            "classname": "Customer",
+            "code": "class Customer(Base):  # type: ignore\n    \"\"\"\n    description: Model representing customers purchasing car parts.\n    \"\"\"\n    __tablename__ = 'customer'\n    _s_collection_name = 'Customer'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    name = Column(String)\n    email = Column(String)\n    phone = Column(String)\n\n    # parent relationships (access parent)\n\n    # child relationships (access children)\n    OrderList : Mapped[List[\"Order\"]] = relationship(back_populates=\"customer\")"
+        },
+        {
+            "classname": "Employee",
+            "code": "class Employee(Base):  # type: ignore\n    \"\"\"\n    description: Model for shop employees.\n    \"\"\"\n    __tablename__ = 'employee'\n    _s_collection_name = 'Employee'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    name = Column(String)\n    hire_date = Column(Date)\n    position = Column(String)"
+        },
+        {
+            "classname": "Supplier",
+            "code": "class Supplier(Base):  # type: ignore\n    \"\"\"\n    description: Model for suppliers providing car parts to the shop.\n    \"\"\"\n    __tablename__ = 'supplier'\n    _s_collection_name = 'Supplier'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    name = Column(String)\n    contact_number = Column(String)\n    address = Column(String)\n\n    # parent relationships (access parent)\n\n    # child relationships (access children)\n    PartList : Mapped[List[\"Part\"]] = relationship(back_populates=\"supplier\")\n    SupplierOrderList : Mapped[List[\"SupplierOrder\"]] = relationship(back_populates=\"supplier\")"
+        },
+        {
+            "classname": "Order",
+            "code": "class Order(Base):  # type: ignore\n    \"\"\"\n    description: Model representing each order made by customers.\n    \"\"\"\n    __tablename__ = 'order'\n    _s_collection_name = 'Order'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    customer_id = Column(ForeignKey('customer.id'))\n    date = Column(Date)\n\n    # parent relationships (access parent)\n    customer : Mapped[\"Customer\"] = relationship(back_populates=(\"OrderList\"))\n\n    # child relationships (access children)\n    OrderItemList : Mapped[List[\"OrderItem\"]] = relationship(back_populates=\"order\")"
+        },
+        {
+            "classname": "Part",
+            "code": "class Part(Base):  # type: ignore\n    \"\"\"\n    description: Model for individual car parts available in the shop.\n    \"\"\"\n    __tablename__ = 'part'\n    _s_collection_name = 'Part'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    name = Column(String)\n    supplier_id = Column(ForeignKey('supplier.id'))\n    price = Column(Integer)\n    stock_quantity = Column(Integer)\n\n    # parent relationships (access parent)\n    supplier : Mapped[\"Supplier\"] = relationship(back_populates=(\"PartList\"))\n\n    # child relationships (access children)\n    InventoryList : Mapped[List[\"Inventory\"]] = relationship(back_populates=\"part\")\n    OrderItemList : Mapped[List[\"OrderItem\"]] = relationship(back_populates=\"part\")\n    PartCategoryList : Mapped[List[\"PartCategory\"]] = relationship(back_populates=\"part\")\n    SupplierOrderItemList : Mapped[List[\"SupplierOrderItem\"]] = relationship(back_populates=\"part\")\n    WarrantyList : Mapped[List[\"Warranty\"]] = relationship(back_populates=\"part\")"
+        },
+        {
+            "classname": "SupplierOrder",
+            "code": "class SupplierOrder(Base):  # type: ignore\n    \"\"\"\n    description: Model representing orders made to suppliers.\n    \"\"\"\n    __tablename__ = 'supplier_order'\n    _s_collection_name = 'SupplierOrder'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    supplier_id = Column(ForeignKey('supplier.id'))\n    date = Column(Date)\n\n    # parent relationships (access parent)\n    supplier : Mapped[\"Supplier\"] = relationship(back_populates=(\"SupplierOrderList\"))\n\n    # child relationships (access children)\n    SupplierOrderItemList : Mapped[List[\"SupplierOrderItem\"]] = relationship(back_populates=\"supplier_order\")"
+        },
+        {
+            "classname": "Inventory",
+            "code": "class Inventory(Base):  # type: ignore\n    \"\"\"\n    description: Model representing inventory details for parts.\n    \"\"\"\n    __tablename__ = 'inventory'\n    _s_collection_name = 'Inventory'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    location = Column(String)\n    part_id = Column(ForeignKey('part.id'))\n    quantity = Column(Integer)\n\n    # parent relationships (access parent)\n    part : Mapped[\"Part\"] = relationship(back_populates=(\"InventoryList\"))"
+        },
+        {
+            "classname": "OrderItem",
+            "code": "class OrderItem(Base):  # type: ignore\n    \"\"\"\n    description: Model for individual items within an order, linking orders with parts.\n    \"\"\"\n    __tablename__ = 'order_item'\n    _s_collection_name = 'OrderItem'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    order_id = Column(ForeignKey('order.id'))\n    part_id = Column(ForeignKey('part.id'))\n    quantity = Column(Integer)\n\n    # parent relationships (access parent)\n    order : Mapped[\"Order\"] = relationship(back_populates=(\"OrderItemList\"))\n    part : Mapped[\"Part\"] = relationship(back_populates=(\"OrderItemList\"))"
+        },
+        {
+            "classname": "PartCategory",
+            "code": "class PartCategory(Base):  # type: ignore\n    \"\"\"\n    description: Junction table to establish many-to-many relationship between parts and categories.\n    \"\"\"\n    __tablename__ = 'part_category'\n    _s_collection_name = 'PartCategory'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    part_id = Column(ForeignKey('part.id'))\n    category_id = Column(ForeignKey('category.id'))\n\n    # parent relationships (access parent)\n    category : Mapped[\"Category\"] = relationship(back_populates=(\"PartCategoryList\"))\n    part : Mapped[\"Part\"] = relationship(back_populates=(\"PartCategoryList\"))"
+        },
+        {
+            "classname": "SupplierOrderItem",
+            "code": "class SupplierOrderItem(Base):  # type: ignore\n    \"\"\"\n    description: Model for items within a supplier order, linking Supplier Orders with Parts.\n    \"\"\"\n    __tablename__ = 'supplier_order_item'\n    _s_collection_name = 'SupplierOrderItem'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    supplier_order_id = Column(ForeignKey('supplier_order.id'))\n    part_id = Column(ForeignKey('part.id'))\n    quantity = Column(Integer)\n\n    # parent relationships (access parent)\n    part : Mapped[\"Part\"] = relationship(back_populates=(\"SupplierOrderItemList\"))\n    supplier_order : Mapped[\"SupplierOrder\"] = relationship(back_populates=(\"SupplierOrderItemList\"))"
+        },
+        {
+            "classname": "Warranty",
+            "code": "class Warranty(Base):  # type: ignore\n    \"\"\"\n    description: Model representing warranty information associated with parts.\n    \"\"\"\n    __tablename__ = 'warranty'\n    _s_collection_name = 'Warranty'  # type: ignore\n\n    id = Column(Integer, primary_key=True)\n    part_id = Column(ForeignKey('part.id'))\n    expiration_date = Column(Date)\n\n    # parent relationships (access parent)\n    part : Mapped[\"Part\"] = relationship(back_populates=(\"WarrantyList\"))"
+        }
+    ]
+}
